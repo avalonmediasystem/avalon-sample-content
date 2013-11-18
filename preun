@@ -1,0 +1,11 @@
+for f in /usr/share/avalon-sample-content/streaming/*
+do
+  rm -r /usr/local/red5/webapps/avalon/streams/$(basename $f)
+done
+for f in /usr/share/avalon-sample-content/hls-streams/*
+do
+  rm -r /var/www/avalon/current/public/streams/$(basename $f)
+done
+runuser - avalon -c "RAILS_ENV=$RAILS_ENV /var/www/avalon/current/script/rails runner /usr/share/avalon-sample-content/unloadDemoContent.rb"
+postuninstall scriptlet (using /bin/sh):
+rmdir /usr/share/avalon-sample-content

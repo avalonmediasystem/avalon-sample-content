@@ -1,0 +1,13 @@
+#Try hard linking first and copy if that fails
+for d in /usr/share/avalon-sample-content/streaming/*/*
+do
+  MO=$(basename $(dirname $d))
+  MF=$(basename $d)
+  mkdir -p /usr/local/red5/webapps/avalon/streams/$MO/$MF
+  for f in /usr/share/avalon-sample-content/streaming/$MO/$MF/*
+  do
+    link $f /usr/local/red5/webapps/avalon/streams/$MO/$MF/$(basename $f) 2> /dev/null || cp $f /usr/local/red5/webapps/avalon/streams/$MO/$MF
+  done
+done
+ln -s /usr/share/avalon-sample-content/hls-streams/* /var/www/avalon/current/public/streams
+runuser - avalon -c "RAILS_ENV=$RAILS_ENV /var/www/avalon/current/script/rails runner /usr/share/avalon-sample-content/loadDemoContent.rb"
